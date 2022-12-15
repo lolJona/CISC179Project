@@ -1,3 +1,7 @@
+"""
+THIS FILE IS TO HELP IN THE CONVERSION TO AN OOP APP.
+"""
+
 import csv
 import tkinter as tk
 from tkinter import *
