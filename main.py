@@ -1,5 +1,5 @@
 import csv
-import tkinter
+import tkinter as tk
 from tkinter import filedialog
 import os
 from csv import reader
@@ -13,73 +13,15 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 print(dir_path)
 
 """
-Define Functions
+Define Functions (MOST FUNCTIONS HAVE BEEN MOVED TO CLASS)
 """
 
 def testpanda():
     panda_df.to_csv("Dow Jones Stocks February.csv", sep='-')
 
-def outfile_error_label_disappear():
-    outfile_error.pack_forget()
-
-
-def outfile_error_label_appear():
-    outfile_error.pack()
-
-
-def openfile():
-    openedfile = filedialog.askopenfilename()
-    print(openedfile)
-
-def singleclick():
-    singlebuttonpress.config(state="disabled")
-
-def csvrun():
-    global default
-    inname = filedialog.askopenfilename()
-    if default == False:
-        outname = str(outfilename_entry.get())
-    else:
-        outname = defaultname
-    try:
-        newfile = open(outname, "x")
-    except:
-        outfile_error_label_appear()
-    if default == False:
-        delim = str(newdelim.get())
-    else:
-        delim = "-"
-    with open(inname, newline='') as infile, open(dir_path + "/" + outname, 'a', newline='') as outfile:
-        reader = csv.reader(infile, delimiter=',')
-        writer = csv.writer(outfile, delimiter=delim)
-        for csvrow in reader:
-            writer.writerow(csvrow)
-        outfile_error_label_disappear()
-
-
-def disable():
-    global default
-    newdelimlabel.config(state="disabled")
-    newdelim.config(state="disabled")
-    outfilename_label.config(state="disabled")
-    outfilename_entry.config(state="disabled")
-    convertButton.config(state="disabled")
-    default = True
-
-
-def enable():
-    global default
-    newdelimlabel.config(state="normal")
-    newdelim.config(state="normal")
-    outfilename_label.config(state="normal")
-    outfilename_entry.config(state="normal")
-    convertButton.config(state="normal")
-    default = False
-
-
 """
 A bunch of code which preps the second outfile, FebStockTips.  
-Code continues around Line 288.
+Code continues around Line ???.
 """
 
 infile = "Dow Jones Stocks February.csv"
@@ -285,64 +227,119 @@ def printer():
             f"{stock8net1}\n"
             f"{monthlygain1}", file=q)
 
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
 
-"""
-Set up tkinter GUI
-"""
-# Root Window
-a = tkinter.Tk()
-a.geometry("300x300")
-a.title("CSV Toy")
+        def disable():
+            global default
+            self.newdelimlabel.config(state="disabled")
+            self.newdelim.config(state="disabled")
+            self.outfilename_label.config(state="disabled")
+            self.outfilename_entry.config(state="disabled")
+            self.convertButton.config(state="disabled")
+            default = True
 
-# Build frame(s) and widgets
-mainframe = tkinter.Frame(a)
-headlabel = tkinter.Label(mainframe, text="CSV Converter", font="Osaka 36")
-singlebuttonpress = tkinter.Button(mainframe, text="1-click",
+        def enable():
+            global default
+            self.newdelimlabel.config(state="normal")
+            self.newdelim.config(state="normal")
+            self.outfilename_label.config(state="normal")
+            self.outfilename_entry.config(state="normal")
+            self.convertButton.config(state="normal")
+            default = False
+        def openfile():
+            openedfile = filedialog.askopenfilename()
+            print(openedfile)
+
+        def outfile_error_label_disappear():
+            self.outfile_error.pack_forget()
+
+        def outfile_error_label_appear():
+            self.outfile_error.pack()
+
+        def singleclick():
+            self.singlebuttonpress.config(state="disabled")
+
+        def csvrun():
+            global default
+            inname = filedialog.askopenfilename()
+            if default == False:
+                outname = str(self.outfilename_entry.get())
+            else:
+                outname = defaultname
+            try:
+                newfile = open(outname, "x")
+            except:
+                outfile_error_label_appear()
+            if default == False:
+                delim = str(self.newdelim.get())
+            else:
+                delim = "-"
+            with open(inname, newline='') as infile, open(dir_path + "/" + outname, 'a', newline='') as outfile:
+                reader = csv.reader(infile, delimiter=',')
+                writer = csv.writer(outfile, delimiter=delim)
+                for csvrow in reader:
+                    writer.writerow(csvrow)
+                outfile_error_label_disappear()
+
+        #Root Window
+        self.title('CSV Converter')
+        self.geometry('350x350')
+
+        #Main Frame
+        self.frame = tk.Frame(self)
+        self.headlabel = tk.Label(self, text="CSV Converter", font="Osaka 36")
+        self.singlebuttonpress = tk.Button(self, text="1-click",
                                    command=lambda: [testpanda(), printer(), singleclick()])
-testlabel = tkinter.Label(mainframe, text="Would you like to use additional features?")
-optional = tkinter.Radiobutton(mainframe, text="Yes", value=1, command=enable)
-optional_no = tkinter.Radiobutton(mainframe, text="No", value=0, command=disable)
+        self.testlabel = tk.Label(self, text="Would you like to use additional features?")
+        self.optional = tk.Radiobutton(self, text="Yes", value=1, command=enable)
+        self.optional_no = tk.Radiobutton(self, text="No", value=0, command=disable)
+        # OPTIONAL widgets
+        self.newdelimlabel = tk.Label(self, text="New Delimiter:")
+        self.newdelim = tk.Entry(self, width=2)
+        self.outfile_error = tk.Label(self, text="This file already exists!", font="Calibri 9", fg="red")
+        self.outfilename_label = tk.Label(self, text="New outfile name:")
+        self.outfilename_entry = tk.Entry(self, width=30)
 
-# OPTIONAL widgets
-newdelimlabel = tkinter.Label(mainframe, text="New Delimiter:")
-newdelim = tkinter.Entry(mainframe, width=2)
-outfile_error = tkinter.Label(mainframe, text="This file already exists!", font="Calibri 9", fg="red")
-outfilename_label = tkinter.Label(mainframe, text="New outfile name:")
-outfilename_entry = tkinter.Entry(mainframe, width=30)
+        # NOT OPTIONAL
+        self.openfilebutton = tk.Button(self, text="Open", command=openfile)
+        self.convertButton = tk.Button(self, text="Convert File", command=lambda: [csvrun(), printer()])
+        self.quitButton = tk.Button(self, text="Quit", command=self.quit)
 
-# NOT OPTIONAL
-openfilebutton = tkinter.Button(mainframe, text="Open", command=openfile)
-convertButton = tkinter.Button(mainframe, text="Convert File", command=lambda: [csvrun(), printer()])
-quitButton = tkinter.Button(mainframe, text="Quit", command=mainframe.quit)
+        self.frame.pack()
+        self.headlabel.pack()
+        self.singlebuttonpress.pack()
+        self.testlabel.pack()
+        self.optional.pack()
+        self.optional_no.pack()
+        self.newdelimlabel.pack()
+        self.newdelim.pack()
+        self.outfile_error.pack()
+        self.outfilename_label.pack()
+        self.outfilename_entry.pack()
+        self.openfilebutton.pack()
+        self.convertButton.pack()
+        self.quitButton.pack()
+        disable()
+        outfile_error_label_disappear()
+        defaultname = "Dow Jones Stocks February.csv"
+        default = True
+        delim = "-"
 
-"""
-PACKING EVERYTHING
-"""
-mainframe.pack()
-headlabel.pack()
-singlebuttonpress.pack()
-testlabel.pack()
-optional.pack()
-optional_no.pack()
-newdelimlabel.pack()
-newdelim.pack()
-outfile_error.pack()
-outfilename_label.pack()
-outfilename_entry.pack()
-# openfilebutton.pack()
-convertButton.pack(side='left')
-quitButton.pack(side='right')
+        inname = dir_path + "/" + "Dow Jones Stocks February.csv"
+        panda_df = pd.read_csv(inname)
 
-# SETTING DEFAULTS and VARIABLES
-disable()
-defaultname = "Dow Jones Stocks February.csv"
-default = True
-delim = "-"
-outfile_error_label_disappear()
-inname = dir_path + "/" + "Dow Jones Stocks February.csv"
-panda_df = pd.read_csv(inname)
+
+
+
+
 
 """
 RUN TKINTER WINDOW
 """
-a.mainloop()
+# SETTING DEFAULTS and VARIABLES
+
+
+app = App()
+app.mainloop()
