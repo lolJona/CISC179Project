@@ -21,7 +21,7 @@ def testpanda():
 
 """
 A bunch of code which preps the second outfile, FebStockTips.  
-Code continues around Line ???.
+Code continues around Line 230.
 """
 
 infile = "Dow Jones Stocks February.csv"
@@ -318,7 +318,7 @@ class App(tk.Tk):
         self.outfile_error.pack()
         self.outfilename_label.pack()
         self.outfilename_entry.pack()
-        self.openfilebutton.pack()
+        #self.openfilebutton.pack()
         self.convertButton.pack()
         self.quitButton.pack()
         disable()
@@ -327,18 +327,14 @@ class App(tk.Tk):
         default = True
         delim = "-"
 
-        inname = dir_path + "/" + "Dow Jones Stocks February.csv"
-        panda_df = pd.read_csv(inname)
-
-
-
-
+# SETTING DEFAULTS and VARIABLES (most have been moved to the App class)
+inname = dir_path + "/" + "Dow Jones Stocks February.csv"
+panda_df = pd.read_csv(inname)
 
 
 """
 RUN TKINTER WINDOW
 """
-# SETTING DEFAULTS and VARIABLES
 
 
 app = App()
